@@ -38,8 +38,8 @@ public class AnimalRepository {
                         field("status"))
                 .values(animal.getName(),
                         animal.getType(),
-                        animal.getGender(),
-                        animal.getStatus())
+                        animal.getGender().name(),
+                        animal.getStatus().name())
                 .execute();
 
         return animal;
@@ -49,8 +49,8 @@ public class AnimalRepository {
         dsl.update(table("animal"))
                 .set(field("name"),animal.getName())
                 .set(field("type"), animal.getType())
-                .set(field("gender"), animal.getGender())
-                .set(field("status"), animal.getStatus())
+                .set(field("gender"), animal.getGender().name())
+                .set(field("status"), animal.getStatus().name())
                 .where("id = ?", animal.getId())
                 .execute();
         return animal;
