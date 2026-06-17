@@ -4,7 +4,6 @@ import com.example.AnimalShelter.entity.AnimalEntity;
 import com.example.AnimalShelter.repository.AnimalRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Service
+
 public class AnimalService {
     private final AnimalRepository animalRepository;
 
