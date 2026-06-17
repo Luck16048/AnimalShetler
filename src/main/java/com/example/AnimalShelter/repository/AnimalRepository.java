@@ -2,14 +2,11 @@ package com.example.AnimalShelter.repository;
 
 import com.example.AnimalShelter.entity.AnimalEntity;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
-
-@Repository
 
 public class AnimalRepository {
 
