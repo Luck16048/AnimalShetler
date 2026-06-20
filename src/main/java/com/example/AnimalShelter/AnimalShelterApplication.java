@@ -8,6 +8,7 @@ import config.ConnectDb;
 import io.javalin.Javalin;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 public class AnimalShelterApplication {
     public static void main(String[] args)  throws SQLException {
@@ -36,8 +37,9 @@ public class AnimalShelterApplication {
         });
 
         app.patch("/animals/{id}", ctx -> {
-            AnimalEntity animal = ctx.bodyAsClass(AnimalEntity.class);
-            ctx.json(service.patch(animal));
+            long id = Long.parseLong(ctx.pathParam("id"));
+            Map<String, Object> update= ctx.bodyAsClass(Map.class);
+            ctx.json(service.patch(id,update));
         });
 
         app.delete("/animals/{id}", ctx -> {

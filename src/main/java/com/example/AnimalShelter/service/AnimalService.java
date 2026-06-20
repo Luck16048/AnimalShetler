@@ -1,6 +1,7 @@
 package com.example.AnimalShelter.service;
 
 import com.example.AnimalShelter.entity.AnimalEntity;
+import com.example.AnimalShelter.entity.StatusEnum;
 import com.example.AnimalShelter.repository.AnimalRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,11 +47,18 @@ public class AnimalService {
         return animal;
     }
 
-    public AnimalEntity patch(AnimalEntity animalEntity) {
-        AnimalEntity animal = animalRepository.update(animalEntity);
-        sendToAudit(animal);
-        return animal;
+    public AnimalEntity patch(long id, Map<String, Object> updates) {
+        AnimalEntity animal = animalRepository.findById(id);
+
+        if(updates.containsKey("status")) {
+            animal.setStatus(StatusEnum.valueOf((String) updates.get("status")));
+        }
+
+        AnimalEntity updated = animalRepository.update(animal);
+        sendToAudit(updated);
+        return updated;
     }
+
     public void delete(long id) {
         animalRepository.delete(id);
         sendToAudit(id);
