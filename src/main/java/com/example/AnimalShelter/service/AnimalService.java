@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -74,7 +75,7 @@ public class AnimalService {
                     Map.of(
                             "id", UUID.randomUUID().toString(),
                             "request", objectMapper.writeValueAsString(request),
-                            "createdAt", LocalDate.now().toString()
+                            "createdAt", LocalDateTime.now().toString()
                     )
             );
             HttpRequest httpRequest = HttpRequest.newBuilder()
