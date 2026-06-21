@@ -18,6 +18,8 @@ import java.util.UUID;
 
 public class AnimalService {
     private final AnimalRepository animalRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public AnimalService(AnimalRepository animalRepository) {
         this.animalRepository = animalRepository;
@@ -64,14 +66,14 @@ public class AnimalService {
         sendToAudit(id);
     }
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+
 
     private void sendToAudit(Object request) {
         try {
-            String json = new ObjectMapper().writeValueAsString(
+            String json = objectMapper.writeValueAsString(
                     Map.of(
                             "id", UUID.randomUUID().toString(),
-                            "request", new ObjectMapper().writeValueAsString(request),
+                            "request", objectMapper.writeValueAsString(request),
                             "createdAt", LocalDate.now().toString()
                     )
             );
