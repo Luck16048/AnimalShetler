@@ -14,4 +14,5 @@ public class AnimalEntity {
     private String type;
     private GenderEnum gender;
     private StatusEnum status;
+    private String imagePath;
 }

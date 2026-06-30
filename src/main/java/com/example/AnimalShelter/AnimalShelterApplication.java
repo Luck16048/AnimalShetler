@@ -1,9 +1,12 @@
 package com.example.AnimalShelter;
 
 
+import com.azure.storage.blob.BlobContainerClient;
 import com.example.AnimalShelter.entity.AnimalEntity;
 import com.example.AnimalShelter.repository.AnimalRepository;
 import com.example.AnimalShelter.service.AnimalService;
+import com.example.AnimalShelter.service.AzureBlobService;
+import config.ConnectAzure;
 import config.ConnectDb;
 import io.javalin.Javalin;
 
@@ -16,6 +19,9 @@ public class AnimalShelterApplication {
         var dsl = ConnectDb.getDSL();
         AnimalRepository repository = new AnimalRepository(dsl);
         AnimalService service = new AnimalService(repository);
+
+        BlobContainerClient containerClient = ConnectAzure.getContainerClient();
+        AzureBlobService azureBlobService = new AzureBlobService(containerClient);
 
         Javalin app = Javalin.create().start(8080);
 
