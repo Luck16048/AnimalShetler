@@ -10,7 +10,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +18,13 @@ import java.util.UUID;
 
 public class AnimalService {
     private final AnimalRepository animalRepository;
+    private final AzureBlobService azureBlobService;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    public AnimalService(AnimalRepository animalRepository) {
+    public AnimalService(AnimalRepository animalRepository, AzureBlobService azureBlobService) {
         this.animalRepository = animalRepository;
+        this.azureBlobService = azureBlobService;
     }
 
     public List<AnimalEntity> getAll() {
@@ -38,10 +39,14 @@ public class AnimalService {
         return animal;
     }
 
-    public AnimalEntity post(AnimalEntity animalEntity) {
+    public AnimalEntity post(AnimalEntity animalEntity, byte[] imageByte, String fileName) {
+        if (imageByte != null && fileName != null) {
+            String imagePath = azureBlobService.uploadImage(imageByte, fileName);
+            animalEntity.setImagePath(imagePath);
+        }
         AnimalEntity animal = animalRepository.save(animalEntity);
         sendToAudit(animal);
-        return  animal;
+        return animal;
     }
 
     public AnimalEntity put(AnimalEntity animalEntity) {
@@ -53,7 +58,7 @@ public class AnimalService {
     public AnimalEntity patch(long id, Map<String, Object> updates) {
         AnimalEntity animal = animalRepository.findById(id);
 
-        if(updates.containsKey("status")) {
+        if (updates.containsKey("status")) {
             animal.setStatus(StatusEnum.valueOf((String) updates.get("status")));
         }
 
@@ -67,7 +72,11 @@ public class AnimalService {
         sendToAudit(id);
     }
 
-
+    public byte[] getImage(long id) {
+        String imagePath = animalRepository.findImagePathById(id);
+        String fileName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+        return azureBlobService.downloadImage(fileName);
+    }
 
     private void sendToAudit(Object request) {
         try {

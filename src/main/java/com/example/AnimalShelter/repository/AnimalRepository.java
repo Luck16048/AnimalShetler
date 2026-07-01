@@ -32,11 +32,13 @@ public class AnimalRepository {
                 .columns(field("name"),
                         field("type"),
                         field("gender"),
-                        field("status"))
+                        field("status"),
+                        field("image_path"))
                 .values(animal.getName(),
                         animal.getType(),
                         animal.getGender().name(),
-                        animal.getStatus().name())
+                        animal.getStatus().name(),
+                        animal.getImagePath())
                 .execute();
 
         return animal;
@@ -44,7 +46,7 @@ public class AnimalRepository {
 
     public AnimalEntity update(AnimalEntity animal) {
         dsl.update(table("animal"))
-                .set(field("name"),animal.getName())
+                .set(field("name"), animal.getName())
                 .set(field("type"), animal.getType())
                 .set(field("gender"), animal.getGender().name())
                 .set(field("status"), animal.getStatus().name())
@@ -54,8 +56,16 @@ public class AnimalRepository {
     }
 
     public void delete(long id) {
-         dsl.deleteFrom(table("animal"))
+        dsl.deleteFrom(table("animal"))
                 .where("id = ?", id)
-                 .execute();
+                .execute();
+    }
+
+    public String findImagePathById(long id) {
+        return dsl.select(field("image_path"))
+                .from(table("animal"))
+                .where("id = ?", id)
+                .fetchOneInto(String.class);
+
     }
 }
